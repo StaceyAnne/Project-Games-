@@ -94,7 +94,7 @@ describe('GET /api/reviews', () => {
                 created_at: expect.any(String),
                 votes: expect.any(Number),
                 designer: expect.any(String),
-                comment_count: expect.any(String),
+                comment_count: expect.any(Number),
             })
         })
         })
@@ -119,7 +119,7 @@ it('should return the correct number of comments for each review object', () => 
         .then(({body}) => {
             const { reviews } = body; 
             const review3 = reviews.filter(review => review.review_id === 3)[0]; 
-            expect(review3.comment_count).toBe('3')
+            expect(review3.comment_count).toBe(3)
         })
 })
     it('404: should respond with a 404 error when passed an incorrect file path', () => {
