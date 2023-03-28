@@ -13,6 +13,6 @@ exports.fetchReview = (reviewId) => {
             return Promise.reject({ status: 404, msg: 'Id does not exist'})
         }
         const { rows } = review; 
-        return rows; 
+        return rows[0]; 
     })
 }

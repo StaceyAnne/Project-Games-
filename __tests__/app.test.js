@@ -43,7 +43,7 @@ describe('200: /api/reviews/:review_id', () => {
         .get('/api/reviews/5')
         .expect(200)
         .then(({ body }) => {
-            const review = body.review[0]
+            const review = body.review; 
             expect(review).toBeInstanceOf(Object)
             expect(review).toMatchObject({
                 review_id: expect.any(Number),
@@ -60,13 +60,13 @@ describe('200: /api/reviews/:review_id', () => {
     })
     it('400: should return an error when user inputs a result id that is not a number', () => {
         return request(app)
-        .get('/api/reviews/invalid_id')
+        .get('/api/reviews/invalidid')
         .expect(400)
         .then(({ body }) => {
             expect(body.msg).toBe("Invalid request")
         })
     })
-     it('should return an error when a user inputs a result id that does not exist ', () => {
+     it('404: should return an error when a user inputs a result id that does not exist ', () => {
         return request(app)
         .get('/api/reviews/999')
         .expect(404)
