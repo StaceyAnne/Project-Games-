@@ -16,3 +16,32 @@ exports.fetchReview = (reviewId) => {
         return rows[0]; 
     })
 }
+
+'review_id',
+      'title',
+      'category',
+      'designer',
+      'owner',
+      'review_img_url',
+      'created_at',
+      'votes',
+      'comment_count'
+ 
+
+exports.fetchAllReviews = () => {
+    return db.query(
+        `SELECT 
+        reviews.title, 
+        reviews.category, 
+        reviews.designer, 
+        reviews.owner, 
+        reviews.review_img_url, 
+        reviews.created_at, 
+        reviews.votes, 
+        reviews.review_id,
+    
+        count(comment_id) AS comment_count FROM reviews LEFT JOIN comments ON comments.review_id = reviews.review_id GROUP BY reviews.review_id ORDER BY reviews.created_at DESC;`)
+    .then(({ rows }) => {
+        return rows; 
+    })
+}
