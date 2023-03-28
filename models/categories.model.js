@@ -1,4 +1,5 @@
-const db = require('../db/connection')
+const db = require('../db/connection');
+
 
 exports.fetchCategories = () => {
     return db.query(
@@ -8,3 +9,4 @@ exports.fetchCategories = () => {
         return categories.rows; 
     })
 }
+
