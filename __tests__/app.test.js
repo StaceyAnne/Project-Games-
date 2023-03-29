@@ -3,6 +3,7 @@ const request = require('supertest')
 const app = require('../app')
 const testData = require('../db/data/test-data')
 const seed = require('../db/seeds/seed')
+const jestSorted = require ('jest-sorted')
 
 beforeEach(() => seed(testData))
 afterAll(() => {
@@ -63,7 +64,7 @@ describe('GET: /api/reviews/:review_id', () => {
         .get('/api/reviews/invalidid')
         .expect(400)
         .then(({ body }) => {
-            expect(body.msg).toBe("Invalid request")
+            expect(body.msg).toBe("Invalid review id")
         })
     })
      it('404: should return an error when a user inputs a result id that does not exist ', () => {
@@ -105,14 +106,12 @@ describe('GET /api/reviews', () => {
         .expect(200)
         .then(({body}) => {
             const { reviews } = body; 
-            let sortedReviews = [...reviews]
-            sortedReviews = reviews.sort(function(a, b) {
-                return b.created_at - a.created_at
-            })
-            expect(reviews).toEqual(sortedReviews)
+            expect(reviews).toBeSortedBy('created_at', {
+                descending: true,
     }) 
 })
-it('should return the correct number of comments for each review object', () => {
+    })
+it('200: should return the correct number of comments for each review object', () => {
     return request(app)
         .get('/api/reviews')
         .expect(200)
@@ -131,5 +130,72 @@ it('should return the correct number of comments for each review object', () => 
             expect(msg).toBe('Incorrect file path')
         })
     })
+})
+describe('GET /api/reviews/:review_id/comments', () => {
+    it('200: should return an array of comments for the given review_id', () => {
+    return request(app)
+    .get('/api/reviews/2/comments')
+    .expect(200)
+    .then(({ body }) => {
+        const { comments } = body; 
+        expect(comments).toBeInstanceOf(Array)
+        expect(comments).toHaveLength(3)
+        comments.forEach((comment) => {
+            expect(comment).toMatchObject({
+                comment_id: expect.any(Number),
+                votes: expect.any(Number),
+                created_at: expect.any(String),
+                author: expect.any(String),
+                body: expect.any(String),
+                review_id: expect.any(Number),
+            })
+        })
+    })
+})
+it('200: should return the correct number of comments for the given review_id', () => {
+    return request(app)
+    .get('/api/reviews/3/comments')
+    .expect(200)
+    .then(({ body }) => {
+        const { comments } = body; 
+        expect(comments.length).toBe(3)
+    })   
+})
+it('200: the returned array should be sorted by most recent comment first ', () => {
+    return request(app)
+    .get('/api/reviews/2/comments')
+    .expect(200)
+    .then(({ body }) => {
+        const { comments } = body; 
+        expect(comments).toBeSortedBy('created_at', {
+            descending: true,
+        })
+    })   
+})
+it('should return an empty array when the review exists, but the has no comments', () => {
+    return request(app)
+    .get('/api/reviews/1/comments')
+    .expect(200)
+    .then(({ body }) => {
+       const { comments } = body; 
+       expect(comments).toEqual([])
+    })   
+});
+it('400: should return an error code when passed an incorrect path i.e not a number', () => {
+    return request(app)
+    .get('/api/reviews/invalidpath/comments')
+    .expect(400)
+    .then(({ body }) => {
+        expect(body.msg).toBe("Invalid review id")
+    })
+})
+it('404: should return an error code when passed a review id that does not exist', () => {
+    return request(app)
+    .get('/api/reviews/999/comments')
+    .expect(404)
+    .then(({ body }) => {
+        expect(body.msg).toBe("Id does not exist")
+    })
+})
 })
 
