@@ -1,15 +1,7 @@
 const db = require('../db/connection')
+const { fetchReview } =  require('./reviews.models')
 
 
-const checkExists = (id) => {
-    return db.query(
-        `SELECT * FROM reviews WHERE review_id = $1;`, [id]
-    ).then((result) => {
-    if (result.rowCount === 0) {
-        return Promise.reject({ status: 404, msg: 'Id does not exist'})
-    }   
-})
-}
 
 exports.fetchCommentsByReviewId = (reviewId) => {
     if (!Number(reviewId)) {
@@ -29,7 +21,7 @@ exports.fetchCommentsByReviewId = (reviewId) => {
     return db.query(queryString, [reviewId])
     .then(({ rows }) => {
         if (rows.length === 0) {
-            return checkExists(reviewId).then(() => {
+            return fetchReview(reviewId).then(() => {
                 return rows; 
             })
         }
