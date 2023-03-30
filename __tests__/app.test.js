@@ -206,9 +206,17 @@ describe("POST: /api/reviews/:review_id/comments", () => {
         .post("/api/reviews/2/comments")
         .send(postBody)
         .expect(201)
-        .then((comment) => {
-         expect(comment.body).toEqual(postBody)
-         expect(comment.body).toBeInstanceOf(Object)
+        .then(( { body } ) => {
+         const { comment } = body; 
+         expect(comment).toBeInstanceOf(Object)
+         expect(comment).toMatchObject({
+            comment_id: expect.any(Number),
+            body: expect.any(String),
+            review_id: expect.any(Number),
+            author: expect.any(String),
+            votes: expect.any(Number),
+            created_at: expect.any(String)
+         })
     })
 })  
 it('201: should add the posted comment to the correct review', () => {
@@ -218,15 +226,15 @@ it('201: should add the posted comment to the correct review', () => {
     .post("/api/reviews/3/comments")
     .send(postBody)
     .expect(201)
-    .then((comment) => {
-        expect(comment.body).toEqual(postBody)
-        
+    .then(({ body }) => {
+        const postedComment = body.comment; 
         return request(app)
         .get('/api/reviews/3/comments')
         .expect(200)
         .then(({ body }) => {
             const { comments } = body;
-            expect(comments[0].body).toEqual(postBody.body)
+            const newComment = comments[0]
+            expect(newComment.body).toEqual(postBody.body)
         })
     })
         })
@@ -260,5 +268,15 @@ it('201: should add the posted comment to the correct review', () => {
             .then((comment) => {
                 expect(comment.body.msg).toBe('Invalid input')
     });
+})
+it('400: should return an error when the user enters an empty object', () => {
+    const postBody = {}
+    return request(app)
+    .post("/api/reviews/3/comments")
+    .send(postBody)
+    .expect(400)
+    .then((comment) => {
+        expect(comment.body.msg).toBe('Invalid input')
+});
 })
 })

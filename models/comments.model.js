@@ -48,7 +48,7 @@ exports.createReviewComment = (reviewId, postBody) =>  {
             return Promise.reject({ status: 404, msg: "Id does not exist"})
         }
       return db.query(queryString, [body, username, reviewId]).then((body) => {
-        return body.rows; 
+        return body.rows[0]; 
     })
 
 })
