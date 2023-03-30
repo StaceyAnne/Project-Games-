@@ -262,8 +262,8 @@ it('400: should return an error when the user enters an empty object', () => {
 })
 })
 
-/ describe.skip("PATCH: /api/reviews:/review_id", () => {
-        it.only('200: should allow user to add a new vote to a review, and return the updated review', () => {
+ describe("PATCH: /api/reviews:/review_id", () => {
+        it('200: should allow user to add a positive vote to a review, and return the updated review in the correct format with the increased vote count', () => {
             const input = { inc_votes: 4 }
             return request(app)
             .patch("/api/reviews/3")
@@ -274,64 +274,81 @@ it('400: should return an error when the user enters an empty object', () => {
                 expect(review).toBeInstanceOf(Object)
                 expect(review).toMatchObject({
                     review_id: 3,
-                    // title: ,
-                    // review_body: ,
-                    // designer: ,
-                    // review_img_url: expect.any(String), 
-                    // votes: 
-                    // category: expect.any(String),
-                    // created_at: expect.any(String),
-                    // votes: expect.any(Number)
+                    title: 'Ultimate Werewolf', 
+                    review_body: "We couldn't find the werewolf!",
+                    category: 'social deduction',
+                    designer: 'Akihisa Okui',
+                    owner: 'bainesface', 
+                    review_img_url: 'https://images.pexels.com/photos/5350049/pexels-photo-5350049.jpeg?w=700&h=700',
+                    created_at: expect.any(String),
+                    votes: 9
             })
         });
     })
-    it("200: should increase the review vote number by the newVote amount on the correct Id", () => {
-        const input = { inc_votes: 4 }
-            return request(app)
-            .patch('/api/reviews/3')
-            .send(input)
-            .expect(200)
-            .then(({ body }) => {
-                const review = body.review; 
-            return request(app)
-            .get("/api/reviews/3")
-            .then(({ body }) => {
-                const vote = body.review.vote; 
-                expect(vote).toBe(7)
-            })
-        });
-    })
-    it("400: should return an erro when the user inputs an incorrect review id, i.e not a number", () => {
+    it('200: should allow user to add a negative vote to a review, and return the updated review in the correct format with the descreased vote count', () => {
+                const input = { inc_votes: -4 }
+                return request(app)
+                .patch("/api/reviews/3")
+                .send(input)
+                .expect(200)
+                .then(({ body }) => {
+                    const review = body.review; 
+                    expect(review).toBeInstanceOf(Object)
+                    expect(review).toMatchObject({
+                        review_id: 3,
+                        title: 'Ultimate Werewolf', 
+                        review_body: "We couldn't find the werewolf!",
+                        category: 'social deduction',
+                        designer: 'Akihisa Okui',
+                        owner: 'bainesface', 
+                        review_img_url: 'https://images.pexels.com/photos/5350049/pexels-photo-5350049.jpeg?w=700&h=700',
+                        created_at: expect.any(String),
+                        votes: 1
+                })
+    });
+})
+    it("400: should return an error when the user inputs an incorrect review id, i.e not a number", () => {
         const input = { inc_votes: 4 }
         return request(app)
         .patch('/api/reviews/invalidpath')
         .send(input)
         .expect(400)
         .then(({ body }) => {
-            const review = body.review; 
-            expect(review.msg).toBe('Invalid innput')
+            const { msg } = body; 
+            expect(msg).toBe('Invalid review id')
         })
     })
     it('400: should return an error when the user inputs the vote in the incorrect format', () => {
-        const input = {}
+        const input = { votes: 4 }
         return request(app)
         .patch('/api/reviews/4')
         .send(input)
         .expect(400)
         .then(({ body }) => {
-            const review = body.review; 
-            expect(review.msg).toBe('Invalid innput')
+            const { msg } = body; 
+            expect(msg).toBe('Invalid input')
+        })
+    })
+    it('400: should return an error when the user inputs an empty object', () => {
+        const input = {  }
+        return request(app)
+        .patch('/api/reviews/4')
+        .send(input)
+        .expect(400)
+        .then(({ body }) => {
+            const { msg } = body; 
+            expect(msg).toBe('Invalid input')
         })
     })
     it('404: should return an error when the review Id does not exist', () => {
         const input = { inc_votes: 4 }
         return request(app)
-        .patch('/api/reviews/invalidpath')
+        .patch('/api/reviews/999')
         .send(input)
         .expect(404)
         .then(({ body }) => {
-            const review = body.review; 
-            expect(review.msg).toBe('Id does not exist')
+            const { msg } = body; 
+            expect(msg).toBe('Id does not exist')
         })
     })
     })

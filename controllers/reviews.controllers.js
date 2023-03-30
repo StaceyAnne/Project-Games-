@@ -19,9 +19,8 @@ exports.getAllReviews = (req, res, next) => {
 exports.patchReviewVote = (req, res, next) => {
     const reviewId = req.params.review_id; 
     const newVote = req.body.inc_votes; 
-    console.log(reviewId, newVote)
+  
     updateVoteByReviewId(reviewId, newVote).then((review) => {
-        console.log(review)
         res.status(200).send({ review })
     }).catch(next)
 }
