@@ -262,7 +262,7 @@ it('400: should return an error when the user enters an empty object', () => {
 })
 })
 
-/ describe.skip("PATCH: /api/reviews:/review_id", () => {
+/ describe("PATCH: /api/reviews:/review_id", () => {
         it.only('200: should allow user to add a new vote to a review, and return the updated review', () => {
             const input = { inc_votes: 4 }
             return request(app)
