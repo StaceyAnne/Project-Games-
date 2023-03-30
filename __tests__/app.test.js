@@ -213,7 +213,7 @@ describe("POST: /api/reviews/:review_id/comments", () => {
             comment_id: expect.any(Number),
             body: "This is a great boardgame!" ,
             review_id: 2,
-            author: expect.any(String),
+            author: 'bainesface',
             votes: expect.any(Number),
             created_at: expect.any(String)
          })
