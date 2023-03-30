@@ -35,6 +35,12 @@ exports.createReviewComment = (reviewId, postBody) =>  {
     if (!Number(reviewId)) {
         return Promise.reject({ status: 400, msg: "Invalid review id"})
     }
+    const postLength = Object.keys(postBody).length; 
+
+    if (postBody.hasOwnProperty('username' && 'body') === false || postLength !== 2) {
+        return Promise.reject({ status: 400, msg: "Invalid input"})
+    }
+
     
     const queryString =
         `INSERT INTO comments

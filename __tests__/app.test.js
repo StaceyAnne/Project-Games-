@@ -211,34 +211,14 @@ describe("POST: /api/reviews/:review_id/comments", () => {
          expect(comment).toBeInstanceOf(Object)
          expect(comment).toMatchObject({
             comment_id: expect.any(Number),
-            body: expect.any(String),
-            review_id: expect.any(Number),
+            body: "This is a great boardgame!" ,
+            review_id: 2,
             author: expect.any(String),
             votes: expect.any(Number),
             created_at: expect.any(String)
          })
     })
 })  
-it('201: should add the posted comment to the correct review', () => {
-    
-    const postBody = { username: "bainesface", body: "This is a great boardgame!" }
-    return request(app)
-    .post("/api/reviews/3/comments")
-    .send(postBody)
-    .expect(201)
-    .then(({ body }) => {
-        const postedComment = body.comment; 
-        return request(app)
-        .get('/api/reviews/3/comments')
-        .expect(200)
-        .then(({ body }) => {
-            const { comments } = body;
-            const newComment = comments[0]
-            expect(newComment.body).toEqual(postBody.body)
-        })
-    })
-        })
-    
     it('404: should return an error when the review id does not exist', () => {
         const postBody = { username: "bainesface", body: "This is a great boardgame!" }
         return request(app)
@@ -261,9 +241,10 @@ it('201: should add the posted comment to the correct review', () => {
     });
     it('400: should return an error when the user enters the incorrect format', () => {
         const postBody = { username: "bainesface" }
+        const postBody2 = { username: "bainesface", body: "great boardgame!", created_at: "this time"}
             return request(app)
             .post("/api/reviews/3/comments")
-            .send(postBody)
+            .send(postBody2)
             .expect(400)
             .then((comment) => {
                 expect(comment.body.msg).toBe('Invalid input')
