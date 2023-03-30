@@ -1,6 +1,6 @@
 const db = require('../db/connection')
 const { fetchReview } =  require('./reviews.models')
-
+const format = require('pg-format')
 
 
 exports.fetchCommentsByReviewId = (reviewId) => {
@@ -29,3 +29,28 @@ exports.fetchCommentsByReviewId = (reviewId) => {
     })
 }
 
+
+exports.createReviewComment = (reviewId, postBody) =>  {
+    const { body, username } = postBody; 
+    if (!Number(reviewId)) {
+        return Promise.reject({ status: 400, msg: "Invalid review id"})
+    }
+    
+    const queryString =
+        `INSERT INTO comments
+         (body, author,review_id) 
+         VALUES ($1, $2, $3) 
+         RETURNING *;`
+    
+
+    return fetchReview(reviewId).then((result) => { 
+        if (!result) {
+            return Promise.reject({ status: 404, msg: "Id does not exist"})
+        }
+      return db.query(queryString, [body, username, reviewId]).then((body) => {
+        return body.rows; 
+    })
+
+})
+
+}

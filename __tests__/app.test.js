@@ -199,3 +199,66 @@ it('404: should return an error code when passed a review id that does not exist
 })
 })
 
+describe("POST: /api/reviews/:review_id/comments", () => {
+    it("201: should allow user to post an object with a username and body and respond with the posted comment", () => {
+        const postBody = { username: "bainesface", body: "This is a great boardgame!" }
+        return request(app)
+        .post("/api/reviews/2/comments")
+        .send(postBody)
+        .expect(201)
+        .then((comment) => {
+         expect(comment.body).toEqual(postBody)
+         expect(comment.body).toBeInstanceOf(Object)
+    })
+})  
+it('201: should add the posted comment to the correct review', () => {
+    
+    const postBody = { username: "bainesface", body: "This is a great boardgame!" }
+    return request(app)
+    .post("/api/reviews/3/comments")
+    .send(postBody)
+    .expect(201)
+    .then((comment) => {
+        expect(comment.body).toEqual(postBody)
+        
+        return request(app)
+        .get('/api/reviews/3/comments')
+        .expect(200)
+        .then(({ body }) => {
+            const { comments } = body;
+            expect(comments[0].body).toEqual(postBody.body)
+        })
+    })
+        })
+    
+    it('404: should return an error when the review id does not exist', () => {
+        const postBody = { username: "bainesface", body: "This is a great boardgame!" }
+        return request(app)
+        .post("/api/reviews/999/comments")
+        .send(postBody)
+        .expect(404)
+        .then(({ body } ) => {
+            expect(body.msg).toEqual("Id does not exist")
+    });
+})
+    it('400: should return an error when an invalid path is entered', () => {
+        const postBody = { username: "bainesface", body: "This is a great boardgame!" }
+        return request(app)
+        .post("/api/reviews/invalid/comments")
+        .send(postBody)
+        .expect(400)
+        .then(( { body }) => {
+            expect(body.msg).toEqual("Invalid review id")
+    });
+    });
+    it('400: should return an error when the user enters the incorrect format', () => {
+        const postBody = { username: "bainesface" }
+            return request(app)
+            .post("/api/reviews/3/comments")
+            .send(postBody)
+            .expect(400)
+            .then((comment) => {
+                expect(comment.body.msg).toBe('Invalid input')
+    });
+})
+})
