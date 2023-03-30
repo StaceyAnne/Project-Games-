@@ -59,25 +59,4 @@ exports.createReviewComment = (reviewId, postBody) =>  {
 
 }
 
-exports.updateVoteByReviewId = (reviewId, patchBody) => {
-    const { body, username } = postBody; 
-    const vote = postBody.inc_votes; 
-    if (!Number(reviewId)) {
-        return Promise.reject({ status: 400, msg: 'Invalid review id'})
-    }
 
-    return fetchReview((reviewId)).then((result) => {
-        if (!result) {
-            return Promise.reject({ status: 404, msg: 'no id'})
-        }
-        
-    const queryString = `update reviews set votes = votes + $1 where review_id = $2 RETURNING*`; 
-
-    return fetchReview(reviewId).then((result) => {
-        return db.query(queryString, [vote, reviewId])
-    }).then((review)=> {
-        return review.body; 
-    } )
-    })
-
-}

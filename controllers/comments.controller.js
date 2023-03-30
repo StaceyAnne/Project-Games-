@@ -1,5 +1,5 @@
 const app = require('../app')
-const { fetchCommentsByReviewId, createReviewComment, updateVoteByReviewId } = require ('../models/comments.model')
+const { fetchCommentsByReviewId, createReviewComment } = require ('../models/comments.model')
 
 exports.getCommentsByReviewId = (req, res, next) => {
     const reviewId = req.params.review_id; 
@@ -17,10 +17,3 @@ exports.postCommentByReviewId = (req, res, next) => {
     .catch(next)
 }
 
-exports.patchReviewVote = (req, res, next) => {
-    const reviewId = req.params.review_id; 
-    const patchBody = req.body; 
-    updateVoteByReviewId(reviewId, patchBody).then((review) => {
-        res.status(200).send({ review })
-    }).catch(next)
-}
