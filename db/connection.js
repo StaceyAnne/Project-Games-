@@ -16,4 +16,6 @@ const config = ENV === 'production'
 : {}; 
 
 
-module.exports = new Pool();
+
+
+module.exports = new Pool(config);
