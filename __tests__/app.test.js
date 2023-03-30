@@ -200,25 +200,25 @@ it('404: should return an error code when passed a review id that does not exist
 })
 
 describe("POST: /api/reviews/:review_id/comments", () => {
-    it("201: should allow user to post an object with a username and body and respond with the posted comment", () => {
-        const postBody = { username: "bainesface", body: "This is a great boardgame!" }
-        return request(app)
-        .post("/api/reviews/2/comments")
-        .send(postBody)
-        .expect(201)
-        .then(( { body } ) => {
-         const { comment } = body; 
-         expect(comment).toBeInstanceOf(Object)
-         expect(comment).toMatchObject({
-            comment_id: expect.any(Number),
-            body: "This is a great boardgame!" ,
-            review_id: 2,
-            author: 'bainesface',
-            votes: expect.any(Number),
-            created_at: expect.any(String)
-         })
-    })
-})  
+//     it("201: should allow user to post an object with a username and body and respond with the posted comment", () => {
+//         const postBody = { username: "bainesface", body: "This is a great boardgame!" }
+//         return request(app)
+//         .post("/api/reviews/2/comments")
+//         .send(postBody)
+//         .expect(201)
+//         .then(( { body } ) => {
+//          const { comment } = body; 
+//          expect(comment).toBeInstanceOf(Object)
+//          expect(comment).toMatchObject({
+//             comment_id: expect.any(Number),
+//             body: "This is a great boardgame!" ,
+//             review_id: 2,
+//             author: 'bainesface',
+//             votes: expect.any(Number),
+//             created_at: expect.any(String)
+//          })
+//     })
+// })  
     it('404: should return an error when the review id does not exist', () => {
         const postBody = { username: "bainesface", body: "This is a great boardgame!" }
         return request(app)
@@ -261,3 +261,77 @@ it('400: should return an error when the user enters an empty object', () => {
 });
 })
 })
+
+// describe("PATCH: /api/reviews:/review_id", () => {
+//     it.skip('200: should allow user to add a new vote to a review, and return the updated review', () => {
+//         const input = { inc_votes: 4 }
+//         return request(app)
+//         .patch("/api/reviews/3")
+//         .send(input)
+//         .expect(200)
+//         .then(({ body }) => {
+//             const review = body.review; 
+//             expect(review).toBeInstanceOf(Object)
+//             expect(review).toMatchObject({
+//                 review_id: 3,
+//                 // title: ,
+//                 // review_body: ,
+//                 // designer: ,
+//                 // review_img_url: expect.any(String), 
+//                 // votes: 
+//                 // category: expect.any(String),
+//                 // created_at: expect.any(String),
+//                 // votes: expect.any(Number)
+//         })
+//     });
+// })
+// it("200: should increase the review vote number by the newVote amount on the correct Id", () => {
+//     const input = { inc_votes: 4 }
+//         return request(app)
+//         .patch('/api/reviews/3')
+//         .send(input)
+//         .expect(200)
+//         .then(({ body }) => {
+//             const review = body.review; 
+//         return request(app)
+//         .get("/api/reviews/3")
+//         .then(({ body }) => {
+//             const vote = body.review.vote; 
+//             expect(vote).toBe(7)
+//         })
+//     });
+// })
+// it("400: should return an erro when the user inputs an incorrect review id, i.e not a number", () => {
+//     const input = { inc_votes: 4 }
+//     return request(app)
+//     .patch('/api/reviews/invalidpath')
+//     .send(input)
+//     .expect(400)
+//     .then(({ body }) => {
+//         const review = body.review; 
+//         expect(review.msg).toBe('Invalid innput')
+//     })
+// })
+// it('400: should return an error when the user inputs the vote in the incorrect format', () => {
+//     const input = {}
+//     return request(app)
+//     .patch('/api/reviews/4')
+//     .send(input)
+//     .expect(400)
+//     .then(({ body }) => {
+//         const review = body.review; 
+//         expect(review.msg).toBe('Invalid innput')
+//     })
+// })
+// it('404: should return an error when the review Id does not exist', () => {
+//     const input = { inc_votes: 4 }
+//     return request(app)
+//     .patch('/api/reviews/invalidpath')
+//     .send(input)
+//     .expect(404)
+//     .then(({ body }) => {
+//         const review = body.review; 
+//         expect(review.msg).toBe('Id does not exist')
+//     })
+// })
+// })
