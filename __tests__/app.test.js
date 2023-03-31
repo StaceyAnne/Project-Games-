@@ -391,4 +391,14 @@ describe("DELETE /api/comments/:comment_id", () => {
         })
     })
     })
+    // describe('GET /api/reviews (queries)', () => {
+    //     it("200: should accept a category query to return all reviews that have a cetegory of social deduction - desc date order by default", () => {
+    //         return request(app)
+    //         .get('/api/reviews/?sort_by=social_deduction')
+    //         .expect(200)
+    //         .then(({ body }) => {
+    //             expect(body).toBeInstanceOf(Array)
+    //         })
+    //     })
+    // })
 
