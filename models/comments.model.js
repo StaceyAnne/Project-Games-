@@ -68,7 +68,6 @@ exports.removeCommentById = (commentId) => {
     return db.query(queryString, [commentId]).then((body) => {
   
         if (body.rowCount === 0) {
-          
             return Promise.reject( { status: 404, msg: "Id does not exist"})
         }
       return body.rows; 
