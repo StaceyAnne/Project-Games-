@@ -354,28 +354,31 @@ it('400: should return an error when the user enters an empty object', () => {
     })
     })
 
-    // describe('GET /api/users', () => {
-    //     it('200: should return an array of objects containing the correct properties') => {
-    //     return request(app)
-    //     .get('/api/users')
-    //     .expect(200)
-    //     .then((result) => {
-    //     expect(result).toBeInstanceOf(Array)
-    //     expect(result.length).toBe(??)
-    //     result.forEach((user) => {
-    //     expect(result).toMatchObject({
-    //     Username: expect.any(String)
-    //     name: expect.any(String)
-    //     Avatar_url: expect.any(String)
-    //     })
-   // }
-        // it(‘400: should return an error when passed an invalid file path)
-        //     Return request(app)
-        // .get(‘/api/user’)
-        // .expect(400)
-        // .then(({ body} ) => {
-        // expect(body.msg).toBe(‘Invalid path’)
-        // }
-        // }
-        
+    describe('GET /api/users', () => {
+        it('200: should return an array of objects containing the correct properties', () => {
+            return request(app)
+            .get('/api/users')
+            .expect(200)
+            .then(({ body }) => {
+            const users = body.rows; 
+            expect(users).toBeInstanceOf(Array)
+            expect(users.length).toBe(4)
+            users.forEach((user) => {
+            expect(user).toMatchObject({
+            username: expect.any(String),
+            name: expect.any(String),
+            avatar_url: expect.any(String)
+            })
+        })
+    })
+})
+        it('404: should return an error when passed an invalid file path', () => { 
+            return request(app)
+            .get('/api/user')
+            .expect(404)
+            .then(({ body} ) => {
+            expect(body.msg).toBe('Incorrect file path')
+        })
+    })
+})
 
