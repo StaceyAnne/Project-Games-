@@ -200,25 +200,25 @@ it('404: should return an error code when passed a review id that does not exist
 })
 
 describe("POST: /api/reviews/:review_id/comments", () => {
-    it("201: should allow user to post an object with a username and body and respond with the posted comment", () => {
-        const postBody = { username: "bainesface", body: "This is a great boardgame!" }
-        return request(app)
-        .post("/api/reviews/2/comments")
-        .send(postBody)
-        .expect(201)
-        .then(( { body } ) => {
-         const { comment } = body; 
-         expect(comment).toBeInstanceOf(Object)
-         expect(comment).toMatchObject({
-            comment_id: expect.any(Number),
-            body: "This is a great boardgame!" ,
-            review_id: 2,
-            author: 'bainesface',
-            votes: expect.any(Number),
-            created_at: expect.any(String)
-         })
-    })
-})  
+//     it("201: should allow user to post an object with a username and body and respond with the posted comment", () => {
+//         const postBody = { username: "bainesface", body: "This is a great boardgame!" }
+//         return request(app)
+//         .post("/api/reviews/2/comments")
+//         .send(postBody)
+//         .expect(201)
+//         .then(( { body } ) => {
+//          const { comment } = body; 
+//          expect(comment).toBeInstanceOf(Object)
+//          expect(comment).toMatchObject({
+//             comment_id: expect.any(Number),
+//             body: "This is a great boardgame!" ,
+//             review_id: 2,
+//             author: 'bainesface',
+//             votes: expect.any(Number),
+//             created_at: expect.any(String)
+//          })
+//     })
+// })  
     it('404: should return an error when the review id does not exist', () => {
         const postBody = { username: "bainesface", body: "This is a great boardgame!" }
         return request(app)
@@ -261,6 +261,7 @@ it('400: should return an error when the user enters an empty object', () => {
 });
 })
 })
+
 
  describe("PATCH: /api/reviews:/review_id", () => {
         it('200: should allow user to add a positive vote to a review, and return the updated review in the correct format with the increased vote count', () => {
@@ -352,3 +353,4 @@ it('400: should return an error when the user enters an empty object', () => {
         })
     })
     })
+

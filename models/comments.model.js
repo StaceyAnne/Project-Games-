@@ -1,6 +1,6 @@
 const db = require('../db/connection')
 const { fetchReview } =  require('./reviews.models')
-const format = require('pg-format')
+
 
 
 exports.fetchCommentsByReviewId = (reviewId) => {
@@ -58,3 +58,5 @@ exports.createReviewComment = (reviewId, postBody) =>  {
 })
 
 }
+
+
