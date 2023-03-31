@@ -1,7 +1,7 @@
 const db = require('../db/connection')
 
-exports.fetchReview = (reviewId) => {
-   
+const fetchReviews = exports.fetchReview = (reviewId) => {
+    
     if (!Number(reviewId)) {
         return Promise.reject({ status: 400, msg: "Invalid review id"})
     }
@@ -33,4 +33,17 @@ exports.fetchAllReviews = () => {
     .then(({ rows }) => {
         return rows; 
     })
+}
+
+exports.updateVoteByReviewId = (reviewId, newVote) => {
+
+    const queryString = `update reviews set votes = votes + $1 where review_id = $2 RETURNING*;`
+
+    return fetchReviews(reviewId).then((result) => {
+       return db.query(queryString, [newVote, reviewId])
+    }).then((review)=> {
+        return review.rows[0]; 
+    })
+    
+
 }
