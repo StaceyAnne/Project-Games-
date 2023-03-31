@@ -391,14 +391,76 @@ describe("DELETE /api/comments/:comment_id", () => {
         })
     })
     })
-    // describe('GET /api/reviews (queries)', () => {
-    //     it("200: should accept a category query to return all reviews that have a cetegory of social deduction - desc date order by default", () => {
-    //         return request(app)
-    //         .get('/api/reviews/?sort_by=social_deduction')
-    //         .expect(200)
-    //         .then(({ body }) => {
-    //             expect(body).toBeInstanceOf(Array)
-    //         })
-    //     })
-    // })
+    describe('GET /api/reviews (queries)', () => {
+        it("200: should accept a category query to return all reviews that the queried category ", () => {
+            return request(app)
+            .get('/api/reviews/?sort_by=social deduction')
+            .expect(200)
+            .then(({ body }) => {
+                const { reviews } = body; 
+                expect(reviews).toBeInstanceOf(Array)
+                expect(reviews.length).toBe(11)
+                })
+            })
+        it('200: should return an array of reviews for the correct cateogry, with the reviews sorted by date in desc order', () => {
+            return request(app)
+            .get('/api/reviews/?sort_by=dexterity')
+            .expect(200)
+            .then(({ body }) => {
+                const { reviews } = body; 
+                expect(reviews).toBeInstanceOf(Array)
+                expect(reviews.length).toBe(1)
+                expect(reviews).toBeSortedBy( "created_at", {
+                    descending: true 
+                })
+        })
+        })
+        it('200: should return an array of reviews for the correct cateogry queried, sorted in the correct order when a sort by query is added', () => {
+            return request(app)
+            .get('/api/reviews/?sort_by=euro game&order=asc')
+            .expect(200)
+            .then(({ body }) => {
+                const { reviews } = body; 
+                expect(reviews).toBeInstanceOf(Array)
+                expect(reviews.length).toBe(1)
+                expect(reviews).toBeSortedBy( "created_at", {
+                    ascending: true 
+                })
+        })
+        })
+        it('200: should return an empty array when the catgory exists, but there are no reviews with the queried category', () => {
+            return request(app)
+            .get('/api/reviews/?sort_by=engine-building')
+            .expect(200)
+            .then(({ body }) => {
+                const { reviews } = body; 
+                expect(reviews).toEqual([])
+        })
+        });
+        it('400: should return an error when the user inputs a cateogry that does not exist', () => {
+            return request(app)
+            .get('/api/reviews/?sort_by=invalidcategory&order=asc')
+            .expect(400)
+            .then(({ body }) => {
+                const { reviews } = body; 
+                const { msg } = body;
+                expect(msg).toBe("Invalid category")
+                
+        })
+        });
+        it('400: should return an error when the user inputs a sort query that does not exist', () => {
+            return request(app)
+            .get('/api/reviews/?sort_by=euro game&order=ascending')
+            .expect(400)
+            .then(({ body }) => {
+                const { reviews } = body; 
+                const { msg } = body;
+                expect(msg).toBe("Invalid sort input")
+        })
+        });
+        })
+            
+
+        
+    
 

@@ -18,22 +18,62 @@ const fetchReviews = exports.fetchReview = (reviewId) => {
 }
 
 
-exports.fetchAllReviews = () => {
-    return db.query(
-        `SELECT 
-        reviews.title, 
-        reviews.category, 
-        reviews.designer, 
-        reviews.owner, 
-        reviews.review_img_url, 
-        reviews.created_at, 
-        reviews.votes, 
-        reviews.review_id,
-        CAST(COUNT(comment_id) AS INT) AS comment_count FROM reviews LEFT JOIN comments ON comments.review_id = reviews.review_id GROUP BY reviews.review_id ORDER BY reviews.created_at DESC;`)
-    .then(({ rows }) => {
-        return rows; 
+
+
+
+exports.fetchAllReviews = (categoryId, sortOrder) => {
+    
+    if (categoryId && 
+        categoryId !== 'social-deduction' &&
+        categoryId !== 'hidden-roles' &&
+        categoryId !== 'deck-building' &&
+        categoryId !== "strategy" &&
+        categoryId !== "engine-building" &&
+        categoryId !== "dexterity" && 
+        categoryId !== 'roll-and-write' &&
+        categoryId !== 'push-your-luck' && 
+        categoryId !== 'euro game' &&
+        categoryId !== 'social deduction'
+        
+        ) {
+           
+            return Promise.reject({ status:400, msg: "Invalid category"})
+        }
+
+    if (sortOrder && sortOrder !== 'desc' && sortOrder !== 'asc') {
+        return Promise.reject({ status:400, msg: "Invalid sort input"})
+    }
+
+    let categoryString = '';
+        
+        if (categoryId) {
+            categoryString += `HAVING category = '${categoryId}'`
+        }
+
+const order = sortOrder || 'DESC'; 
+
+
+const queryString =  `SELECT 
+reviews.title, 
+reviews.category, 
+reviews.designer, 
+reviews.owner, 
+reviews.review_img_url, 
+reviews.created_at, 
+reviews.votes, 
+reviews.review_id,
+CAST(COUNT(comment_id) AS INT) AS comment_count FROM reviews LEFT JOIN comments ON comments.review_id = reviews.review_id GROUP BY reviews.review_id ${categoryString} ORDER BY reviews.created_at ${order};`
+
+return db.query(queryString)
+    .then((result) => {
+        const reviews = result.rows; 
+        
+        return reviews; 
     })
 }
+
+
+
 
 exports.updateVoteByReviewId = (reviewId, newVote) => {
 
@@ -41,8 +81,9 @@ exports.updateVoteByReviewId = (reviewId, newVote) => {
 
     return fetchReviews(reviewId).then((result) => {
        return db.query(queryString, [newVote, reviewId])
-    }).then((review)=> {
-        return review.rows[0]; 
+    }).then((result)=> {
+        const review = result.rows[0]
+        return review; 
     })
     
 
