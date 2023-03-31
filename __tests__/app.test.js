@@ -200,25 +200,25 @@ it('404: should return an error code when passed a review id that does not exist
 })
 
 describe("POST: /api/reviews/:review_id/comments", () => {
-//     it("201: should allow user to post an object with a username and body and respond with the posted comment", () => {
-//         const postBody = { username: "bainesface", body: "This is a great boardgame!" }
-//         return request(app)
-//         .post("/api/reviews/2/comments")
-//         .send(postBody)
-//         .expect(201)
-//         .then(( { body } ) => {
-//          const { comment } = body; 
-//          expect(comment).toBeInstanceOf(Object)
-//          expect(comment).toMatchObject({
-//             comment_id: expect.any(Number),
-//             body: "This is a great boardgame!" ,
-//             review_id: 2,
-//             author: 'bainesface',
-//             votes: expect.any(Number),
-//             created_at: expect.any(String)
-//          })
-//     })
-// })  
+    it("201: should allow user to post an object with a username and body and respond with the posted comment", () => {
+        const postBody = { username: "bainesface", body: "This is a great boardgame!" }
+        return request(app)
+        .post("/api/reviews/2/comments")
+        .send(postBody)
+        .expect(201)
+        .then(( { body } ) => {
+         const { comment } = body; 
+         expect(comment).toBeInstanceOf(Object)
+         expect(comment).toMatchObject({
+            comment_id: expect.any(Number),
+            body: "This is a great boardgame!" ,
+            review_id: 2,
+            author: 'bainesface',
+            votes: expect.any(Number),
+            created_at: expect.any(String)
+         })
+    })
+})  
     it('404: should return an error when the review id does not exist', () => {
         const postBody = { username: "bainesface", body: "This is a great boardgame!" }
         return request(app)
@@ -261,5 +261,34 @@ it('400: should return an error when the user enters an empty object', () => {
 });
 })
 })
+
+describe("DELETE /api/comments/:comment_id", () => {
+    it('204: should allow the user to delete a comment by the given comment_id and should return no content', () => {
+        return request(app)
+        .delete('/api/comments/2')
+        .expect(204)
+        .then((result) => {
+            expect(result.body).toEqual({})
+        })
+    })
+    it('404: should return an error when the comment id does not exist', () => {
+        return request(app)
+        .delete('/api/comments/999')
+        .expect(404)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Id does not exist")
+        })
+    });
+    it('400: should return an error when an invalid file path is entered, i.e not a number', () => {
+        return request(app)
+        .delete('/api/comments/invalidpath')
+        .expect(400)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Invalid comment id")
+        })
+    })
+})
+
+
 
 
