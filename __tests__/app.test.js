@@ -41,7 +41,7 @@ describe('GET /api/categories', () => {
 describe('GET: /api/reviews/:review_id', () => {
     it('should return an object when user inputs a valid review_id endpoint', () => {
         return request(app)
-        .get('/api/reviews/5')
+        .get('/api/reviews/3')
         .expect(200)
         .then(({ body }) => {
             const review = body.review; 
@@ -55,7 +55,8 @@ describe('GET: /api/reviews/:review_id', () => {
                 votes: expect.any(Number),
                 category: expect.any(String),
                 created_at: expect.any(String),
-                votes: expect.any(Number)
+                votes: expect.any(Number), 
+                comment_count: 3,
             })
         })
     })
@@ -320,7 +321,7 @@ describe("DELETE /api/comments/:comment_id", () => {
                     owner: 'bainesface', 
                     review_img_url: 'https://images.pexels.com/photos/5350049/pexels-photo-5350049.jpeg?w=700&h=700',
                     created_at: expect.any(String),
-                    votes: 9
+                    votes: 9,
             })
         });
     })
@@ -491,4 +492,16 @@ describe("DELETE /api/comments/:comment_id", () => {
         })
     })
 })
+
+// describe('GET /api/reviews/:review_id (comment count)', () => {
+//     it('200: returned review object should contain a comment count property', () => {
+//         return request(app)
+//         .get('/api/reviews/2')
+//         .expect(200)
+//         .then(({ body }) => {
+//             const commentCount = body.rows.commentCount; 
+//             expect(commentCount).toBe()
+//         })
+//     });
+// })
 
