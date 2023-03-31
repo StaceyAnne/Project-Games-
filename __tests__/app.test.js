@@ -262,6 +262,44 @@ it('400: should return an error when the user enters an empty object', () => {
 })
 })
 
+describe("DELETE /api/comments/:comment_id", () => {
+    it('204: should allow the user to delete a comment by the given comment_id and should return no content', () => {
+        return request(app)
+        .delete('/api/comments/2')
+        .expect(204)
+        .then((result) => {
+            expect(result.body).toEqual({})
+            
+        return request(app)
+        .delete('/api/comments/2')
+        .expect(404)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Id does not exist")
+        })
+        })
+
+          
+    })
+    it('404: should return an error when the comment id does not exist', () => {
+        return request(app)
+        .delete('/api/comments/999')
+        .expect(404)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Id does not exist")
+        })
+    });
+    it('400: should return an error when an invalid file path is entered, i.e not a number', () => {
+        return request(app)
+        .delete('/api/comments/invalidpath')
+        .expect(400)
+        .then(({ body }) => {
+            expect(body.msg).toBe("Invalid comment id")
+        })
+    })
+})
+
+
+
 
  describe("PATCH: /api/reviews:/review_id", () => {
         it('200: should allow user to add a positive vote to a review, and return the updated review in the correct format with the increased vote count', () => {

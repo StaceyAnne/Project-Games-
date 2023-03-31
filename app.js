@@ -1,7 +1,13 @@
 const { getCategories } = require('./controllers/categories.controller')
+
+
+const { getCommentsByReviewId, postCommentByReviewId, deleteCommentById } = require("./controllers/comments.controller")
+
 const { getReviewById, getAllReviews, patchReviewVote } = require('./controllers/reviews.controllers')
+
 const { getCommentsByReviewId, postCommentByReviewId } = require("./controllers/comments.controller")
 const { getUsers } = require('./controllers/users.controllers')
+
 const express = require('express')
 const app = express(); 
 
@@ -12,10 +18,12 @@ app.get('/api/reviews', getAllReviews)
 app.get('/api/users', getUsers)
 app.get('/api/reviews/:review_id/comments', getCommentsByReviewId)
 app.post('/api/reviews/:review_id/comments', postCommentByReviewId)
+app.delete('/api/comments/:comment_id', deleteCommentById)
 app.patch('/api/reviews/:review_id', patchReviewVote)
 
 
 app.all('/*', (req, res, next) => {
+
 
     res.status(404).send({ msg: "Incorrect file path"})
     next(err)
