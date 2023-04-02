@@ -7,7 +7,7 @@ const fetchReviews = exports.fetchReview = (reviewId) => {
         return Promise.reject({ status: 400, msg: "Invalid review id"})
     }
     const queryString = 'SELECT * FROM reviews WHERE review_id = $1;'
-
+    //added a comment 
 
     const queryString2 = `SELECT 
     reviews.title, 
