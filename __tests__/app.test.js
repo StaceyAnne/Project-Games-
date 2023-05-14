@@ -200,7 +200,7 @@ it('404: should return an error code when passed a review id that does not exist
 })
 })
 
-describe("POST: /api/reviews/:review_id/comments", () => {
+describe.only("POST: /api/reviews/:review_id/comments", () => {
     it("201: should allow user to post an object with a username and body and respond with the posted comment", () => {
         const postBody = { username: "bainesface", body: "This is a great boardgame!" }
         return request(app)
