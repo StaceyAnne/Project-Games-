@@ -505,13 +505,13 @@ describe('GET /api/reviews/:review_id (comment count)', () => {
     });
 })
 
-describe('GET /api', () => {
+describe.only('GET /api', () => {
     it('should return an array of users', () => {
         return request(app)
         .get('/api')
         .expect(200)
         .then(( { body }) => {
-            
+           expect(body).toBeInstanceOf(Object)
         })
     });
 })

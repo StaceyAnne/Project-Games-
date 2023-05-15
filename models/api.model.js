@@ -1,12 +1,7 @@
-const fs = require('fs')
-exports.fetchEndPoints = () => {
-    fs.readFile(`${__dirname}/endpoints.json`, 'utf8', (err, response) => {
-        if (err) {
-            return err; 
-        }
+const fs = require('fs/promises')
 
-        else {
+exports.fetchEndPoints =  async () => {
+    return fs.readFile(`${__dirname}/../endpoints.json`, 'utf8', (err, response) => {
             return response; 
-        }
     })
 }
