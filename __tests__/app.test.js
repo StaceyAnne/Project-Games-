@@ -173,7 +173,7 @@ it('200: the returned array should be sorted by most recent comment first ', () 
         })
     })   
 })
-it('should return an empty array when the review exists, but the has no comments', () => {
+it('should return an empty array when the review exists, but the review has no comments', () => {
     return request(app)
     .get('/api/reviews/1/comments')
     .expect(200)
@@ -493,15 +493,26 @@ describe("DELETE /api/comments/:comment_id", () => {
     })
 })
 
-// describe('GET /api/reviews/:review_id (comment count)', () => {
-//     it('200: returned review object should contain a comment count property', () => {
-//         return request(app)
-//         .get('/api/reviews/2')
-//         .expect(200)
-//         .then(({ body }) => {
-//             const commentCount = body.rows.commentCount; 
-//             expect(commentCount).toBe()
-//         })
-//     });
-// })
+describe('GET /api/reviews/:review_id (comment count)', () => {
+    it('200: returned review object should contain a comment count property', () => {
+        return request(app)
+        .get('/api/reviews/2')
+        .expect(200)
+        .then(({ body }) => {
+            const commentCount = body.review.comment_count;  
+            expect(commentCount).toBe(3)
+        })
+    });
+})
+
+describe.only('GET /api', () => {
+    it('should return an array of users', () => {
+        return request(app)
+        .get('/api')
+        .expect(200)
+        .then(( { body }) => {
+           expect(body).toBeInstanceOf(Object)
+        })
+    });
+})
 
