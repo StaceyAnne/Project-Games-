@@ -5,6 +5,7 @@ const { getCommentsByReviewId, postCommentByReviewId, deleteCommentById } = requ
 
 const { getReviewById, getAllReviews, patchReviewVote } = require('./controllers/reviews.controllers')
 const { getUsers } = require('./controllers/users.controllers')
+const {  getEndPoints } = require('./controllers/api.controller')
 
 
 const express = require('express')
@@ -19,6 +20,7 @@ app.post('/api/reviews/:review_id/comments', postCommentByReviewId)
 app.delete('/api/comments/:comment_id', deleteCommentById)
 app.patch('/api/reviews/:review_id', patchReviewVote)
 app.get('/api/users', getUsers)
+app.get('/api', getEndPoints)
 
 app.all('*', (req, res, next) => {
 
